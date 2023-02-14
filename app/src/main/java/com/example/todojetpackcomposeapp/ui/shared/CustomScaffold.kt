@@ -1,12 +1,8 @@
 package com.example.todojetpackcomposeapp.ui.shared
 
 import android.os.Build
-import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.*
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,22 +11,18 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.todojetpackcomposeapp.ui.screens.addTask.AddTaskScreen
 import com.example.todojetpackcomposeapp.ui.screens.main.MainScreen
 import com.example.todojetpackcomposeapp.ui.screens.tasksList.TasksListScreen
@@ -58,15 +50,12 @@ fun CustomScaffold(
 
     androidx.compose.material.Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        //todo replace button relocation
         floatingActionButton = {
             if (showBottomBar) {
-
                 AddTodoFloatingActionButton(
                     navController = navController,
                     resetTaskId = { viewModel.taskId.value = -1 }
                 )
-
             }
         },
         floatingActionButtonPosition = androidx.compose.material.FabPosition.Center,
@@ -132,7 +121,6 @@ fun CustomScaffold(
         }
     ) {
         content(Modifier.padding(it))
-        //todo crate router class with router pass as screen
         NavHost(navController = navController, startDestination = "main") {
             composable("main") { MainScreen(viewModel = viewModel, navController = navController) }
             composable("list") {

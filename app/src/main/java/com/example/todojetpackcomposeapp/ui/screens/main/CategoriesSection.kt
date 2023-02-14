@@ -12,6 +12,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -119,6 +122,7 @@ fun CategoryCard(
         .collectAsState(initial = 0)
         .value
 
+    var deleteAlertDialogState by remember { mutableStateOf(false) }
     var stateDialog by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
 
@@ -164,10 +168,9 @@ fun CategoryCard(
                 CategoryCardDropDownMenu(
                     changeExpended = { expanded = false },
                     expanded = expanded,
-                    deleteCategory = deleteCategory,
-                    item = item,
                     openDialog = { stateDialog = true },
-                    closeDropDownMenu = { expanded = false }
+                    closeDropDownMenu = { expanded = false },
+                    openDeleteAlertDialog = { deleteAlertDialogState = true }
                 )
 
             }
@@ -222,6 +225,13 @@ fun CategoryCard(
                 )
             }
         }
+        if (deleteAlertDialogState) {
+           CustomDeleteAlertDialog(
+               closeDeleteAlertDialog = { deleteAlertDialogState = false },
+               item = item,
+               deleteCategory = { deleteCategory(it) }
+           )
+        }
         if (stateDialog) {
             AddCategoryAlertDialog(
                 closeDialog = { stateDialog = false },
@@ -263,15 +273,82 @@ fun AddCategoryCard(
                 contentDescription = null,
                 modifier = Modifier.size(50.dp),
             )
-            Text(text = "Add New Category")
+            Text(text = "Add a category")
         }
-
         if (stateDialog) {
             AddCategoryAlertDialog(
                 closeDialog = { stateDialog = false },
                 insertCategory = insertCategory,
                 updateCategory = updateCategory
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomDeleteAlertDialog(
+    modifier: Modifier = Modifier,
+    closeDeleteAlertDialog: () -> Unit,
+    item: Category,
+    deleteCategory: (Category) -> Unit
+) {
+
+    val interactionSourceBtn1 = remember { MutableInteractionSource() }
+    val isPressedBtn1 by interactionSourceBtn1.collectIsPressedAsState()
+
+    val interactionSourceBtn2 = remember { MutableInteractionSource() }
+    val isPressedBtn2 by interactionSourceBtn2.collectIsPressedAsState()
+
+    val colorBtn1 = if (isPressedBtn1) Color(0xFF1E1D1A) else Color.White
+    val textColorBtn1 = if (isPressedBtn1) Color.White else Color(0xFF1E1D1A)
+
+    val colorBtn2 = if (isPressedBtn2) MaterialTheme.colorScheme.error else Color.White
+    val textColorBtn2 = if (isPressedBtn2) Color.White else MaterialTheme.colorScheme.error
+
+
+    AlertDialog(
+        onDismissRequest = closeDeleteAlertDialog
+    ) {
+        Surface(
+            modifier = modifier.wrapContentWidth(),
+            shape = MaterialTheme.shapes.large,
+            color = Color.White
+        ) {
+            Column (
+                modifier = modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = "Delete \"${item.title}\"?")
+                Row(modifier = modifier.fillMaxWidth().padding(top = 20.dp)) {
+                    Button(
+                        modifier = modifier
+                            .padding(start = 3.dp, end = 8.dp)
+                            .weight(1f)
+                            .height(50.dp)
+                            .border(1.dp, Color(0xFF1E1D1A), MaterialTheme.shapes.small),
+                        shape = MaterialTheme.shapes.small,
+                        interactionSource = interactionSourceBtn1,
+                        colors = ButtonDefaults.buttonColors(containerColor = colorBtn1),
+                        onClick = closeDeleteAlertDialog
+                    ) {
+                        Text(text = "Close", color = textColorBtn1)
+                    }
+                    Button(
+                        modifier = modifier
+                            .padding(start = 8.dp, end = 3.dp)
+                            .weight(1f)
+                            .height(50.dp)
+                            .border(1.dp, MaterialTheme.colorScheme.error, MaterialTheme.shapes.small),
+                        shape = MaterialTheme.shapes.small,
+                        interactionSource = interactionSourceBtn2,
+                        colors = ButtonDefaults.buttonColors(containerColor = colorBtn2),
+                        onClick = {deleteCategory(item)}
+                    ) {
+                        Text(text = "Delete", color = textColorBtn2)
+                    }
+                }
+            }
         }
     }
 }

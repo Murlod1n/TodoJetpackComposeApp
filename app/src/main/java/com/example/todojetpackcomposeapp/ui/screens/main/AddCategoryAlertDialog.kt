@@ -32,6 +32,7 @@ fun AddCategoryAlertDialog(
 
     var text by remember { mutableStateOf(category?.title ?: "") }
     var titleError by remember { mutableStateOf("") }
+    var counter by remember { mutableStateOf(1) }
 
     val interactionSourceBtn1 = remember { MutableInteractionSource() }
     val isPressedBtn1 by interactionSourceBtn1.collectIsPressedAsState()
@@ -52,12 +53,13 @@ fun AddCategoryAlertDialog(
 
     val controller = rememberColorPickerController()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(counter) {
         controller.selectByCoordinate(
             colorCoord[0],
             colorCoord[1],
             fromUser = false
         )
+        if (counter < 2) counter++
     }
 
     AlertDialog(
@@ -73,7 +75,7 @@ fun AddCategoryAlertDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Add Category",
+                    text = if(category == null) "Add a category" else "Edit a category",
                     modifier = modifier.padding(vertical = 10.dp),
                     style = MaterialTheme.typography.headlineSmall
                 )
@@ -103,8 +105,7 @@ fun AddCategoryAlertDialog(
                         .fillMaxWidth()
                         .height(150.dp)
                         .padding(20.dp),
-                    controller = controller,
-                    onColorChanged = { }
+                    controller = controller
                 )
                 Box(
                     modifier = modifier

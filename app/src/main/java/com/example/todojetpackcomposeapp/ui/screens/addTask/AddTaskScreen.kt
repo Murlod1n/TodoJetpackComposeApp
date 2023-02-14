@@ -47,7 +47,13 @@ fun AddTaskScreen(
 
     val allCategories by viewModel.allCategories.collectAsState()
 
-    var screenTitle by remember { mutableStateOf("") }
+    val screenTitle =
+        if (viewModel.taskId.value != -1) {
+            "Edit a task"
+        } else {
+            "Add a task"
+        }
+
     var titleError by remember { mutableStateOf("") }
     var categoryError by remember { mutableStateOf("") }
 
@@ -65,17 +71,6 @@ fun AddTaskScreen(
             viewModel.resetTask()
         }
         navController.popBackStack()
-    }
-
-    val route = navController.currentBackStackEntry?.destination?.route
-
-    LaunchedEffect(Unit) {
-        screenTitle = if (route?.contains("edit") == true) {
-            "Edit task"
-        } else {
-            "Add new task"
-        }
-
     }
 
     Column(
