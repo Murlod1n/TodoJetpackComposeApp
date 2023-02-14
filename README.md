@@ -1,4 +1,7 @@
 # Jetpack Compose App - To Do List
+<img src="presentation_materials/img.png" width="270" height="585"/> <img src="presentation_materials/img_1.png" width="270" height="585"/> <img src="presentation_materials/img_2.png" width="270" height="585"/>
+
+
 
 ___
 
@@ -13,7 +16,7 @@ ___
 
 ___
 
-### Application view
+### Application view (GIF)
 
 ##### Progress screen
 <table>
