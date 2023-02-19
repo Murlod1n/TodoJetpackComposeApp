@@ -27,7 +27,6 @@ class AppModule {
         return TodoDatabase.getDatabase(context = app)
     }
 
-
     @Singleton
     @Provides
     fun providerTodoDao(appDatabase: TodoDatabase): TodoDao {

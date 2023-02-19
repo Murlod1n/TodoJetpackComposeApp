@@ -31,11 +31,7 @@ class MainActivity : ComponentActivity() {
                     Surface(
                         modifier = Modifier.fillMaxSize(),
                         color = Color(0xFFF8F7F3),
-                    ) {
-                        //MainScreen(viewModel = viewModel)
-                        //AddTaskScreen(viewModel = viewModel)
-                        //TasksListScreen(viewModel = viewModel)
-                    }
+                    ) {}
                 }
 
             }
